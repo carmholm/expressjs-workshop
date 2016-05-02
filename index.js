@@ -17,71 +17,71 @@ app.get('/', function(req, res) {
 //Exercise 1: Getting started!
 // Create a web server that can listen to requests for /hello, and respond with some HTML that says <h1>Hello World!</h1>
 
-// app.get('/hello', function (req, res){
-//   res.send('<h1>Hello World!</h1>');
-// });
+app.get('/hello', function (req, res){
+  res.send('<h1>Hello World!</h1>');
+});
 
 // Exercise 2: A wild parameter has appeared!
 // Create a web server that can listen to requests for /hello?name=firstName, and respond with some HTML that says <h1>Hello _name_!</h1>. For example, if a client requests /hello/John, the server should respond with <h1>Hello John!</h1>.
 
-// function sayHello (name){
-//   return "<h1>Hello " + name +" !</h1>";
-// }
+function sayHello (name){
+  return "<h1>Hello " + name +" !</h1>";
+}
 
-// app.get('/hello/:name', function(req, res){
-//   var name = req.params.name;
-//   var result = sayHello(name);
-//   res.send(result);
-// });
+app.get('/hello/:name', function(req, res){
+  var name = req.params.name;
+  var result = sayHello(name);
+  res.send(result);
+});
 
-// function calculator (operation, num1, num2){
-// var firstOp = parseInt(num1);
-// var secondOp = parseInt(num2);
-// if (operation === "add"){
-//     return {
-//       "operator": "add",
-//       "firstOperand": firstOp,
-//       "second Operand": secondOp,
-//       "solution": firstOp + secondOp
-//     };
-//   }
-//   else if (operation === "sub"){
-//     return {
-//       "operator": "sub",
-//       "firstOperand": firstOp,
-//       "second Operand": secondOp,
-//       "solution": firstOp - secondOp
-//     };
-//   }
-//   else if (operation === "mult"){
-//     return {
-//       "operator": "mult",
-//       "firstOperand": firstOp,
-//       "second Operand": secondOp,
-//       "solution": firstOp * secondOp
-//     };
-//   }
-//   else if (operation === "div"){
-//     return {
-//       "operator": "div",
-//       "firstOperand": firstOp,
-//       "second Operand": secondOp,
-//       "solution": firstOp / secondOp
-//     };
-//   }
-//     else {
-//       return "Error";
-//   }
-// }
+function calculator (operation, num1, num2){
+var firstOp = parseInt(num1);
+var secondOp = parseInt(num2);
+if (operation === "add"){
+    return {
+      "operator": "add",
+      "firstOperand": firstOp,
+      "second Operand": secondOp,
+      "solution": firstOp + secondOp
+    };
+  }
+  else if (operation === "sub"){
+    return {
+      "operator": "sub",
+      "firstOperand": firstOp,
+      "second Operand": secondOp,
+      "solution": firstOp - secondOp
+    };
+  }
+  else if (operation === "mult"){
+    return {
+      "operator": "mult",
+      "firstOperand": firstOp,
+      "second Operand": secondOp,
+      "solution": firstOp * secondOp
+    };
+  }
+  else if (operation === "div"){
+    return {
+      "operator": "div",
+      "firstOperand": firstOp,
+      "second Operand": secondOp,
+      "solution": firstOp / secondOp
+    };
+  }
+    else {
+      return "Error";
+  }
+}
 
-// app.get('/calculator/:operation/:num1/:num2', function(req, res){
-//   console.log(res.status);
-//   var operation = req.params.operation;
-//   var num1 = req.params.num1;
-//   var num2 = req.params.num2;
-//   var result = calculator(operation, num1, num2);
-//   result == "Error" ? res.status(400).send("Bad Request") : res.send(result);
-// });
+app.get('/calculator/:operation/:num1/:num2', function(req, res){
+  console.log(res.status);
+  var operation = req.params.operation;
+  var num1 = req.params.num1;
+  var num2 = req.params.num2;
+  var result = calculator(operation, num1, num2);
+  result == "Error" ? res.status(400).send("Bad Request") : res.send(result);
+});
 
 function getRedditPosts(callback) {
   connection.query(`SELECT p.title, p.url, p.createdAt, p.updatedAt, p.subredditId, u.username 
@@ -116,6 +116,8 @@ app.get('/posts', function(req, res) {
             </h2>
             <p>Created by ${post.username}</p>
           </li>`});
+        
+        
         res.send(`
           <div id="contents">
             <h1>List of posts</h1>
@@ -128,16 +130,17 @@ app.get('/posts', function(req, res) {
   });
 });
 
-// app.get('/createContent', function(req, res){
-//   res.sendFile('form.html', function(err, fileContent) {
-//         if (err) {
-//             res.status(500).send('the file could not be read');
-//         }
-//         else {
-//             res.send(fileContent);
-//         }
-//     })
-// })
+app.get('/createContent', function(req, res){
+  res.sendFile('form.html', { root: __dirname + '/'}, function(err, result) {
+        if (err) {
+          console.log(err);
+          res.status(err.status).end();
+        }
+        else {
+            console.log('File sent');
+        }
+    });
+});
 
 
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
