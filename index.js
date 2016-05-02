@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var fs = require('fs');
+var bodyParser = require('body-parser');
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
@@ -141,6 +141,59 @@ app.get('/createContent', function(req, res){
         }
     });
 });
+
+// create application/json parser
+var jsonParser = bodyParser.json();
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+// POST /login gets urlencoded bodies
+app.post('/createContent', urlencodedParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400);
+  // res.send(req.body);
+  var answer = req.body;
+  createPost(answer, function(err, post){
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.send(post);
+    }
+  });
+});
+
+// POST /api/users gets JSON bodies
+app.post('/createContent', jsonParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400);
+  // create user in req.body
+});
+
+
+function createPost (post, callback) {
+      connection.query(
+        'INSERT INTO `posts` (`userId`, `title`, `url`, `createdAt`) VALUES (?, ?, ?, ?)', [1, post.title, post.url, null],
+        function(err, result) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            connection.query(
+              'SELECT `id`,`title`,`url`,`userId`, `createdAt`, `updatedAt` FROM `posts` WHERE `id` = ?', [result.insertId],
+              function(err, result) {
+                if (err) {
+                  callback(err);
+                }
+                else {
+                  callback(null, result[0]);
+                }
+              }
+            );
+          }
+        }
+      );
+    }
+
 
 
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
